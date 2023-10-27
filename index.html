@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Big Game</title>
+    <base href="./image/" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+      @layer utilities {
+        .content-auto {
+          content-visibility: auto;
+        }
+      }
+      .right {
+        background: url("pepole1.jpeg");
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+      .left {
+        background: url("pepole2.jpeg");
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="h-screen w-full relative">
+      <div class="game-page flex w-full h-full">
+        <div
+          class="left w-6/12 h-full flex flex-col justify-evenly items-center"
+        >
+          <div
+            class="total h-22 w-72 bg-stone-300/50 text-white flex flex-col items-center p-6 rounded"
+          >
+            <h2 class="bold text-3xl">Total Score</h2>
+            <p class="player-1 text-2xl" contenteditable="true">player 1</p>
+            <span class="total-player text-3xl bold">0</span>
+          </div>
+          <!-- total rihgt -->
+          <div
+            class="total h-22 w-72 bg-stone-300/50 text-white flex flex-col items-center p-6 rounded"
+          >
+            <h2 class="bold text-4xl">Current Score</h2>
+            <span class="current-player bold text-3xl">0</span>
+          </div>
+          <!-- current right -->
+        </div>
+        <!--right div -->
+        <div
+          class="right w-6/12 h-full bg-red-600 flex flex-col justify-evenly items-center"
+        >
+          <div
+            class="total h-22 w-72 bg-stone-300/50 text-white flex flex-col items-center p-6 rounded"
+          >
+            <h2 class="bold text-3xl">Total Score</h2>
+            <p class="player-2 text-2xl" contenteditable="true">player 2</p>
+            <span class="total-cpu text-3xl">0</span>
+          </div>
+          <!-- total left -->
+          <div
+            class="total h-22 w-72 bg-stone-300/50 text-white flex flex-col items-center p-6 rounded"
+          >
+            <h2 class="bold text-4xl">Current Score</h2>
+            <span class="current-cpu bold text-3xl">0</span>
+          </div>
+          <!-- current left -->
+        </div>
+        <!-- left div -->
+      </div>
+      <!-- game page -->
+      <div
+        class="game-control absolute h-full w-3/12 top-0 left-2/4 -translate-x-2/4 flex flex-col justify-center items-center space-y-5"
+      >
+        <div
+          class="start-game backdrop-blur-md bg-indigo-200 px-6 py-3 text-3xl rounded active:brightness-50 active:scale-95 transition-all select-none"
+        >
+          Start Game
+        </div>
+        <div
+          class="roll-dice Start-game backdrop-blur-md bg-indigo-200 px-6 py-3 text-3xl rounded active:brightness-50 active:brightness-50 active:scale-95 transition-all select-none"
+        >
+          Roll dice
+        </div>
+        <div
+          class="hold Start-game backdrop-blur-md bg-indigo-200 px-6 py-3 text-3xl rounded active:brightness-50 active:brightness-50 active:scale-95 transition-all select-none"
+        >
+          Hold
+        </div>
+        <div class="dice w-56 h-56 rounded-3xl overflow-hidden opacity-0">
+          <img class="img-dice w-full h-full opacity-0" src="" />
+        </div>
+      </div>
+    </div>
+    <!-- container -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              clifford: "#da373d",
+            },
+          },
+        },
+      };
+    </script>
+    <script>
+      var startGameBtn = document.querySelector(".start-game");
+      var rollDiceBtn = document.querySelector(".roll-dice");
+      var holdBtn = document.querySelector(".hold");
+      var imgDice = document.querySelector(".img-dice");
+      var totalPlayer = document.querySelector(".total-player");
+      var currentPlayer = document.querySelector(".current-player");
+      var totalCpu = document.querySelector(".total-cpu");
+      var currentCpu = document.querySelector(".current-cpu");
+      var left = document.querySelector(".left");
+      var right = document.querySelector(".right");
+      var player1 = document.querySelector(".player-1");
+      var player2 = document.querySelector(".player-2");
+      var player = 1;
+      function main() {
+        startGameBtn.classList.add("opacity-0");
+        startGameBtn.parentElement.removeChild(startGameBtn);
+        var isSingle = window.confirm("Do you want to play alone?");
+        rollDiceBtn.addEventListener("keydown", (e) => {
+          if ((e.key = "Enter")) {
+            rollDiceBtn.click();
+          }
+        });
+
+        function rollerDice() {
+          imgDice.parentElement.classList.remove("opacity-0");
+          imgDice.classList.remove("opacity-0");
+          var random = Math.floor(Math.random() * 6) + 1;
+          imgDice.setAttribute("src", `${random}.png`);
+          if (!isSingle) {
+            if (!isSingle && player == 1) {
+              currentPlayer.textContent =
+                Number(currentPlayer.textContent) + random;
+              if (random == 1) {
+                currentPlayer.textContent = "0";
+                setTimeout(() => {
+                  player = 2;
+                  currentCpu.parentElement.classList.add("brightness-125");
+                  currentCpu.parentElement.classList.remove("brightness-50");
+                  currentPlayer.parentElement.classList.add("brightness-50");
+                }, 1500);
+              }
+            } else if (!isSingle && player == 2) {
+              currentCpu.textContent = Number(currentCpu.textContent) + random;
+              if (random == 1) {
+                currentCpu.textContent = "0";
+                player = 1;
+                setTimeout(() => {
+                  currentPlayer.parentElement.classList.add("brightness-125");
+                  currentPlayer.parentElement.classList.remove("brightness-50");
+                  currentCpu.parentElement.classList.add("brightness-50");
+                }, 1500);
+              }
+            }
+          } else if (isSingle) {
+            if (isSingle && player == 1) {
+              currentPlayer.textContent =
+                Number(currentPlayer.textContent) + random;
+              if (random == 1) {
+                player = 2;
+                currentPlayer.textContent = "0";
+                currentCpu.parentElement.classList.add("brightness-125");
+                currentCpu.parentElement.classList.remove("brightness-50");
+                currentPlayer.parentElement.classList.add("brightness-50");
+                setTimeout(() => {
+                  rollDiceBtn.click();
+                }, 1500);
+              }
+            } else if (isSingle && player == 2) {
+              var AI = setTimeout(() => {
+                rollDiceBtn.click();
+                currentCpu.textContent =
+                  Number(currentCpu.textContent) + random;
+              }, 1000);
+              var timeOutHold = setTimeout(() => {
+                holdBtn.click();
+              }, random * 1000 + 2);
+              if (random == 1) {
+                player = 1;
+                clearTimeout(AI);
+                clearTimeout(timeOutHold);
+                currentPlayer.parentElement.classList.add("brightness-125");
+                currentPlayer.parentElement.classList.remove("brightness-50");
+                currentCpu.parentElement.classList.add("brightness-50");
+                currentCpu.textContent = "0";
+              }
+            }
+          }
+        }
+        function holder() {
+          if (player % 2 !== 0) {
+            totalPlayer.textContent =
+              Number(totalPlayer.textContent) +
+              Number(currentPlayer.textContent);
+            currentPlayer.textContent = "0";
+          } else if (player % 2 == 0) {
+            totalCpu.textContent =
+              Number(currentCpu.textContent) + Number(totalCpu.textContent);
+            currentCpu.textContent = "0";
+          }
+          if (totalPlayer.textContent >= 100) {
+            left.classList.add("brightness-125");
+            right.classList.add("brightness-50");
+            window.alert(`${player1.textContent} Won !`);
+            holdBtn.removeEventListener("click", holder);
+            rollDiceBtn.removeEventListener("click", rollerDice);
+          } else if (totalCpu.textContent >= 100) {
+            right.classList.add("brightness-125");
+            left.classList.add("brightness-50");
+            window.alert(`${player2.textContent} Won !`);
+            holdBtn.removeEventListener("click", holder);
+            rollDiceBtn.removeEventListener("click", rollerDice);
+          }
+        }
+
+        rollDiceBtn.addEventListener("click", rollerDice);
+        holdBtn.addEventListener("click", holder);
+      }
+      var main = startGameBtn.addEventListener("click", main);
+    </script>
+  </body>
+</html>
